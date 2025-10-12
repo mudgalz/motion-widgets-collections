@@ -1,6 +1,6 @@
 # Three Shaders Collection
 
-![Three Shaders Collection](public/og_image.png)
+![Three Shaders Collection](public/og_image.webp)
 
 Explore interactive WebGL shaders built with **Three.js** and **React**. This project features three unique experiences:
 
