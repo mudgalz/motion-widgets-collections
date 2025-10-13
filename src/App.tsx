@@ -1,33 +1,21 @@
-import type { ReactElement } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import RingsShader from "./components/shaders/Rings";
 import SunCtrlShader from "./components/shaders/SunRaymarch";
+import Clock from "./pages/clock";
 import ThreeGallery from "./pages/gallery";
 import Home from "./pages/home";
 
-interface AppRoute {
-  path: string;
-  element: ReactElement;
-  layout?: React.ComponentType<{ children: React.ReactNode }>;
-}
-
-const routes: AppRoute[] = [
-  { path: "/", element: <Home /> },
-  { path: "/infinite-gallery", element: <ThreeGallery /> },
-  { path: "/axel-rings", element: <RingsShader /> },
-  { path: "/sunset-raymarch", element: <SunCtrlShader /> },
-];
-
 export default function App() {
-  const location = useLocation();
-
   return (
     <>
-      <Routes location={location} key={location.pathname}>
-        {routes.map(({ path, element }) => (
-          <Route key={path} path={path} element={element} />
-        ))}
+      <Routes>
+        <Route index path="/" element={<Home />} />
+        <Route path="/infinite-gallery" element={<ThreeGallery />} />
+        <Route path="/axel-rings" element={<RingsShader />} />
+        <Route path="/sunset-raymarch" element={<SunCtrlShader />} />
+        <Route path="/clock-of-clocks" element={<Clock />} />
       </Routes>
+
       <a
         tabIndex={-1}
         href="https://mudgal.framer.ai"
