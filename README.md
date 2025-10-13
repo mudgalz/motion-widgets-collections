@@ -17,7 +17,7 @@ Explore interactive WebGL shaders built with **Three.js** and **React**. This pr
 
 ## Live Demo
 
-Check out the live version: [Three Shaders Collection](https://three-shaders-collection.netlify.app/)
+Check out the live version: [Three Shaders Collection](https://motion-widgets.vercel.app/)
 
 ---
 
@@ -35,5 +35,5 @@ Check out the live version: [Three Shaders Collection](https://three-shaders-col
 1. Clone the repo:
 
 ```bash
-git clone git@github.com:mudgalz/three-shaders-collection.git
+git clone git@github.com:mudgalz/motion-widgets.git
 ```
