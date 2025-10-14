@@ -9,7 +9,7 @@ const Hand: React.FC<{ rotation: number }> = ({ rotation }) => (
   <div
     className="absolute top-1/2 left-1/2 origin-left bg-yellow-400 duration-500 ease-in-out"
     style={{
-      width: "50%",
+      width: "calc(50% - 1px)",
       height: "2px",
       rotate: `${rotation}deg`,
     }}
