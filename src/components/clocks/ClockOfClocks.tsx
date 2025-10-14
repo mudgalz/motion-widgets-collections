@@ -1,13 +1,11 @@
-import { ArrowLeft } from "@/assets/icons";
-import { Button } from "@/components/ui/button";
 import { cell, equal, now, type Time } from "@/lib/clock-utils";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import BottomInfoText from "../BottomInfoText";
 
 /* ------------------------- Hand & Dot Components ------------------------- */
 const Hand: React.FC<{ rotation: number }> = ({ rotation }) => (
   <div
-    className="absolute top-1/2 left-1/2 origin-left bg-yellow-400 duration-500 ease-in-out"
+    className="absolute top-1/2 left-1/2 origin-left bg-indigo-400 duration-500 ease-in-out shadow-[0_0_6px] shadow-indigo-700"
     style={{
       width: "calc(50% - 1px)",
       height: "2px",
@@ -18,7 +16,7 @@ const Hand: React.FC<{ rotation: number }> = ({ rotation }) => (
 
 const Dot: React.FC = () => (
   <div
-    className="absolute top-1/2 left-1/2 bg-yellow-400 rounded-full"
+    className="absolute top-1/2 left-1/2 bg-indigo-400 rounded-full"
     style={{
       width: "2px",
       height: "2px",
@@ -29,7 +27,7 @@ const Dot: React.FC = () => (
 
 /* ------------------------- Cell Component ------------------------- */
 const Cell: React.FC<{ rotations: number[] }> = ({ rotations }) => (
-  <div className="relative rounded-full bg-transparent border border-accent size-7 md:size-12">
+  <div className="relative rounded-full bg-indigo-800/5 border border-indigo-950/50 size-7 md:size-12">
     <Hand rotation={rotations[0]} />
     <Hand rotation={rotations[1]} />
     <Dot />
@@ -56,7 +54,7 @@ const Field: React.FC<{
 );
 
 /* ------------------------- Main Clock Component ------------------------- */
-const Clock: React.FC = () => {
+const ClockOfClocks: React.FC = () => {
   const [time, setTime] = useState<Time>(now());
 
   useEffect(() => {
@@ -72,13 +70,6 @@ const Clock: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-4 left-4 z-20 flex gap-1">
-        <Link to="/" tabIndex={-1}>
-          <Button title="Home" variant={"ghost"} size={"icon"}>
-            <ArrowLeft className="size-4" />
-          </Button>
-        </Link>
-      </div>
       <div className="flex justify-center items-center min-h-screen flex-col">
         <div className="flex gap-8 md:flex-row flex-col ">
           <Field name="hours" value={time.hours} />
@@ -86,8 +77,9 @@ const Clock: React.FC = () => {
           <Field name="seconds" value={time.seconds} />
         </div>
       </div>
+      <BottomInfoText text="Digital clock that visualizes time using multiple mini analog clocks." />
     </>
   );
 };
 
-export default Clock;
+export default ClockOfClocks;

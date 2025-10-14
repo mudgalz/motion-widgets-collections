@@ -1,10 +1,6 @@
+import type { ImageItem } from "@/components/infinite-gallery/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-
-export interface ImageItem {
-  src: string;
-  alt: string;
-}
 
 interface FetchImagesOptions {
   query?: string;

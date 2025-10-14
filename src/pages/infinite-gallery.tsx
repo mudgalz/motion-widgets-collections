@@ -1,5 +1,5 @@
 import { ArrowLeft } from "@/assets/icons";
-import InfiniteGallery from "@/components/InfiniteGallery";
+import InfiniteGallery from "@/components/infinite-gallery";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";

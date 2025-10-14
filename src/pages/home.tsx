@@ -24,7 +24,7 @@ const pages = [
     id: 4,
     url: "/clock-of-clocks",
     name: "Clock of Clocks",
-    desc: "An animated clock that visualizes time using multiple mini clocks with different time hand positions.",
+    desc: "A collection of interactive and animated clocks including digital, analog, stopwatch, and countdown timers.",
   },
 ];
 

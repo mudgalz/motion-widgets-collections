@@ -1,152 +1,17 @@
-"use client";
-
 import { useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-// import { imageFragmentShader, imageVertexShader } from "./shaders/glsl";
-import type { ImageItem } from "@/hooks/useFetchImages";
-const imageVertexShader = `  uniform float scrollForce;
-      uniform float time;
-      uniform float isHovered;
-      varying vec2 vUv;
-      varying vec3 vNormal;
+import type { ImageItem, InfiniteGalleryProps, PlaneData } from "./types";
 
-      void main() {
-        vUv = uv;
-        vNormal = normal;
-
-        vec3 pos = position;
-
-        // Create smooth curving based on scroll force
-        float curveIntensity = scrollForce * 0.3;
-
-        // Base curve across the plane based on distance from center
-        float distanceFromCenter = length(pos.xy);
-        float curve = distanceFromCenter * distanceFromCenter * curveIntensity;
-
-        // Add gentle cloth-like ripples
-        float ripple1 = sin(pos.x * 2.0 + scrollForce * 3.0) * 0.02;
-        float ripple2 = sin(pos.y * 2.5 + scrollForce * 2.0) * 0.015;
-        float clothEffect = (ripple1 + ripple2) * abs(curveIntensity) * 2.0;
-
-        // Flag waving effect when hovered
-        float flagWave = 0.0;
-        if (isHovered > 0.5) {
-          // Create flag-like wave from left to right
-          float wavePhase = pos.x * 3.0 + time * 8.0;
-          float waveAmplitude = sin(wavePhase) * 0.1;
-          // Damping effect - stronger wave on the right side (free edge)
-          float dampening = smoothstep(-0.5, 0.5, pos.x);
-          flagWave = waveAmplitude * dampening;
-
-          // Add secondary smaller waves for more realistic flag motion
-          float secondaryWave = sin(pos.x * 5.0 + time * 12.0) * 0.03 * dampening;
-          flagWave += secondaryWave;
-        }
-
-        // Apply Z displacement for curving effect (inverted) with cloth ripples and flag wave
-        pos.z -= (curve + clothEffect + flagWave);
-
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-      }`;
-
-const imageFragmentShader = ` uniform sampler2D map;
-      uniform float opacity;
-      uniform float blurAmount;
-      uniform float scrollForce;
-      varying vec2 vUv;
-      varying vec3 vNormal;
-
-      void main() {
-        vec4 color = texture2D(map, vUv);
-
-        // Simple blur approximation
-        if (blurAmount > 0.0) {
-          vec2 texelSize = 1.0 / vec2(textureSize(map, 0));
-          vec4 blurred = vec4(0.0);
-          float total = 0.0;
-
-          for (float x = -2.0; x <= 2.0; x += 1.0) {
-            for (float y = -2.0; y <= 2.0; y += 1.0) {
-              vec2 offset = vec2(x, y) * texelSize * blurAmount;
-              float weight = 1.0 / (1.0 + length(vec2(x, y)));
-              blurred += texture2D(map, vUv + offset) * weight;
-              total += weight;
-            }
-          }
-          color = blurred / total;
-        }
-
-        // Add subtle lighting effect based on curving
-        float curveHighlight = abs(scrollForce) * 0.05;
-        color.rgb += vec3(curveHighlight * 0.1);
-
-        gl_FragColor = vec4(color.rgb, color.a * opacity);
-      }`;
-
-interface FadeSettings {
-  /** Fade in range as percentage of depth range (0-1) */
-  fadeIn: {
-    start: number;
-    end: number;
-  };
-  /** Fade out range as percentage of depth range (0-1) */
-  fadeOut: {
-    start: number;
-    end: number;
-  };
-}
-
-interface BlurSettings {
-  /** Blur in range as percentage of depth range (0-1) */
-  blurIn: {
-    start: number;
-    end: number;
-  };
-  /** Blur out range as percentage of depth range (0-1) */
-  blurOut: {
-    start: number;
-    end: number;
-  };
-  /** Maximum blur amount (0-10, higher values = more blur) */
-  maxBlur: number;
-}
-
-interface InfiniteGalleryProps {
-  images: ImageItem[];
-  /** Speed multiplier applied to scroll delta (default: 1) */
-  speed?: number;
-  /** Spacing between images along Z in world units (default: 2.5) */
-  zSpacing?: number;
-  /** Number of visible planes (default: clamp to images.length, min 8) */
-  visibleCount?: number;
-  /** Near/far distances for opacity/blur easing (default: { near: 0.5, far: 12 }) */
-  falloff?: { near: number; far: number };
-  /** Fade in/out settings with ranges based on depth range percentage (default: { fadeIn: { start: 0.05, end: 0.15 }, fadeOut: { start: 0.85, end: 0.95 } }) */
-  fadeSettings?: FadeSettings;
-  /** Blur in/out settings with ranges based on depth range percentage (default: { blurIn: { start: 0.0, end: 0.1 }, blurOut: { start: 0.9, end: 1.0 }, maxBlur: 3.0 }) */
-  blurSettings?: BlurSettings;
-  /** Optional className for outer container */
-  className?: string;
-  /** Optional style for outer container */
-  style?: React.CSSProperties;
-}
-
-interface PlaneData {
-  index: number;
-  z: number;
-  imageIndex: number;
-  x: number;
-  y: number; // Added y property for vertical positioning
-}
+// Custom shader material for blur, opacity, and cloth folding effects
+import imageFragmentShader from "./image.frag";
+import imageVertexShader from "./image.vert";
 
 const DEFAULT_DEPTH_RANGE = 50;
 const MAX_HORIZONTAL_OFFSET = 8;
 const MAX_VERTICAL_OFFSET = 8;
 
-// Custom shader material for blur, opacity, and cloth folding effects
 const createClothMaterial = () => {
   return new THREE.ShaderMaterial({
     transparent: true,
@@ -540,7 +405,7 @@ function FallbackGallery({ images }: { images: ImageItem[] }) {
   );
 
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gray-100 p-4">
+    <div className="flex flex-col items-center justify-center h-full p-4">
       <p className="text-gray-600 mb-4">
         WebGL not supported. Showing image list:
       </p>

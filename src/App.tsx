@@ -1,9 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import RingsShader from "./components/shaders/Rings";
-import SunCtrlShader from "./components/shaders/SunRaymarch";
-import Clock from "./pages/clock";
-import ThreeGallery from "./pages/gallery";
-import Home from "./pages/home";
+import { AxelRings, Clocks, Home, SunRaymarch, ThreeGallery } from "./pages";
 
 export default function App() {
   return (
@@ -11,9 +7,9 @@ export default function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="/infinite-gallery" element={<ThreeGallery />} />
-        <Route path="/axel-rings" element={<RingsShader />} />
-        <Route path="/sunset-raymarch" element={<SunCtrlShader />} />
-        <Route path="/clock-of-clocks" element={<Clock />} />
+        <Route path="/axel-rings" element={<AxelRings />} />
+        <Route path="/sunset-raymarch" element={<SunRaymarch />} />
+        <Route path="/clock-of-clocks" element={<Clocks />} />
       </Routes>
 
       <a
