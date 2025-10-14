@@ -1,14 +1,15 @@
+// neuronoise mouse events
 import { NeuroNoise } from "@paper-design/shaders-react";
 import { useEffect, useRef, useState } from "react";
 
 const colors = [
-  "#ffffff",
   "#47a6ff",
   "#5c4dff",
   "#00c853",
   "#ff6d00",
+  "#ff1744",
   "#ff80ab",
-  "#707070",
+  "#651fff",
 ];
 
 const hexToRgb = (hex: string) => {
@@ -32,32 +33,62 @@ const interpolateColor = (c1: any, c2: any, t: number) => ({
 });
 
 const NeuroNoiseBG = () => {
+  const [rotation, setRotation] = useState(0);
   const [colorFront, setColorFront] = useState(colors[0]);
   const [colorMid, setColorMid] = useState(colors[1]);
-  const rotationRef = useRef(0);
+
+  const targetRotationRef = useRef(0);
+  const targetSpeedRef = useRef(1);
+  const rotationRef = useRef(rotation);
+  const speedRef = useRef(1); // track speed for smooth interpolation
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const { clientX, clientY } = e;
+
+      // vertical position maps to speed (1-5)
+      targetSpeedRef.current = 1 + (clientY / innerHeight) * 4;
+
+      // horizontal position maps to rotation (0-180)
+      targetRotationRef.current = (clientX / innerWidth) * 180;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   useEffect(() => {
     let animationFrame: number;
 
     const animate = () => {
-      // Increment smoothly
-      rotationRef.current += 0.01; // smaller step = smoother
-      if (rotationRef.current >= colors.length) rotationRef.current = 0;
+      // Smooth rotation
+      const newRotation =
+        rotationRef.current +
+        (targetRotationRef.current - rotationRef.current) * 0.05;
+      rotationRef.current = newRotation;
+      setRotation(newRotation);
 
-      const index = Math.floor(rotationRef.current);
-      const nextIndex = (index + 1) % colors.length;
-      const t = rotationRef.current - index; // fractional part
+      // Smooth speed
+      const newSpeed =
+        speedRef.current + (targetSpeedRef.current - speedRef.current) * 0.1;
+      speedRef.current = newSpeed;
+
+      // Map rotation to colors
+      const t = newRotation / 180;
+      const colorIndex = Math.floor(t * (colors.length - 1));
+      const nextIndex = (colorIndex + 1) % colors.length;
+      const localT = (t * (colors.length - 1)) % 1;
 
       const front = interpolateColor(
-        hexToRgb(colors[index]),
+        hexToRgb(colors[colorIndex]),
         hexToRgb(colors[nextIndex]),
-        t
+        localT
       );
-
       const mid = interpolateColor(
         hexToRgb(colors[nextIndex]),
         hexToRgb(colors[(nextIndex + 1) % colors.length]),
-        t
+        localT
       );
 
       setColorFront(rgbToHex(front));
@@ -67,7 +98,6 @@ const NeuroNoiseBG = () => {
     };
 
     animate();
-
     return () => cancelAnimationFrame(animationFrame);
   }, []);
 
@@ -79,7 +109,9 @@ const NeuroNoiseBG = () => {
         colorBack="#000000"
         brightness={0.05}
         contrast={0.3}
-        speed={2}
+        scale={Math.max(speedRef.current / 3, 0.8)} // scale derived from smooth speed
+        speed={speedRef.current} // smooth speed
+        rotation={rotation}
         style={{ width: "100%", height: "100%" }}
       />
     </div>
