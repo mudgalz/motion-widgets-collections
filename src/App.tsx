@@ -9,7 +9,7 @@ export default function App() {
   return (
     <>
       <Routes>
-        <Route index path="/" element={<Home />} />
+        <Route index element={<Home />} />
         <Route path="/infinite-gallery" element={<ThreeGallery />} />
         <Route path="/axel-rings" element={<RingsShader />} />
         <Route path="/sunset-raymarch" element={<SunCtrlShader />} />

@@ -1,7 +1,6 @@
-import NeuroNoiseBG from "@/components/backgrounds/NeuroNoise";
 import { Container } from "@/components/ui/Container";
-import { Link } from "react-router-dom";
-
+import { NeuroNoise } from "@paper-design/shaders-react";
+import { Link } from "react-router";
 const pages = [
   {
     id: 1,
@@ -25,16 +24,26 @@ const pages = [
     id: 4,
     url: "/clock-of-clocks",
     name: "Clock of Clocks",
-    desc: "An animated clock that visualizes time using hands of multiple mini clocks.",
+    desc: "An animated clock that visualizes time using multiple mini clocks with different time hand positions.",
   },
 ];
 
 export default function Home() {
   return (
     <section className="flex flex-col items-center gap-5 justify-center min-h-screen py-8">
-      <NeuroNoiseBG />
-      <h1 className="md:text-8xl text-4xl italic font-serif mix-blend-soft-light md:mb-20">
-        Let's try some cool stuff
+      <NeuroNoise
+        colorFront="#47a6ff"
+        colorMid="#5c4dff"
+        colorBack="#000000"
+        brightness={0.05}
+        contrast={0.2}
+        speed={2}
+        scale={0.8}
+        style={{ width: "100%", height: "100%" }}
+        className="fixed inset-0 w-full h-full -z-10 bg-gray-950"
+      />
+      <h1 className="md:text-8xl text-shadow-xs text-shadow-black text-center text-4xl italic font-serif mix-blend-soft-light md:mb-20">
+        Some cool stuff.
       </h1>
 
       <Container className="flex flex-col items-center justify-center">

@@ -7,10 +7,10 @@ import Providers from "./providers";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Providers>
-      <BrowserRouter>
+    <BrowserRouter>
+      <Providers>
         <App />
-      </BrowserRouter>
-    </Providers>
+      </Providers>
+    </BrowserRouter>
   </React.StrictMode>
 );
