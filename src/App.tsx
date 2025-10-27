@@ -9,7 +9,7 @@ export default function App() {
         <Route path="/infinite-gallery" element={<ThreeGallery />} />
         <Route path="/axel-rings" element={<AxelRings />} />
         <Route path="/sunset-raymarch" element={<SunRaymarch />} />
-        <Route path="/clock-of-clocks" element={<Clocks />} />
+        <Route path="/clocks" element={<Clocks />} />
       </Routes>
 
       <a

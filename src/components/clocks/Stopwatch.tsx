@@ -2,46 +2,7 @@ import { Button } from "@/components/ui/button";
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
 import BottomInfoText from "../BottomInfoText";
-
-const digits = Array.from({ length: 10 }, (_, i) => i);
-
-interface DigitProps {
-  value: number;
-  speed?: number;
-}
-
-const DigitWheel = ({ value, speed = 0.3 }: DigitProps) => {
-  const numRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!numRef.current) return;
-    gsap.to(numRef.current, {
-      y: -value * 100,
-      duration: speed,
-      ease: "power3.out",
-    });
-  }, [value, speed]);
-
-  return (
-    <div className="relative h-[100px] w-[55px] sm:w-[65px] overflow-hidden rounded-2xl  text-center font-medium font-mono text-[5rem] sm:text-[6.5rem]">
-      <div ref={numRef}>
-        {digits.map((d) => (
-          <div
-            key={d}
-            className="flex  items-center justify-center h-[100px] select-none text-stone-300 px-2"
-            style={{
-              textShadow:
-                "0 0 4px var(--color-sidebar-accent), 0 0 10px var(--color-sidebar-accent), 0 0 14px var(--color-sidebar-accent)",
-            }}>
-            {d}
-          </div>
-        ))}
-      </div>
-      {/* Optional overlay (can remove if fully transparent) */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none" />
-    </div>
-  );
-};
+import RollingDigit from "../RollingDigit";
 
 export default function Stopwatch() {
   const [time, setTime] = useState(0);
@@ -132,13 +93,13 @@ export default function Stopwatch() {
 
         {/* Stopwatch digits */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <DigitWheel value={digitsArray[0]} />
-          <DigitWheel value={digitsArray[1]} />
+          <RollingDigit value={digitsArray[0]} />
+          <RollingDigit value={digitsArray[1]} />
           <span className="text-5xl sm:text-6xl font-bold mt-[-10px] text-stone-400">
             :
           </span>
-          <DigitWheel value={digitsArray[2]} />
-          <DigitWheel value={digitsArray[3]} />
+          <RollingDigit value={digitsArray[2]} />
+          <RollingDigit value={digitsArray[3]} />
           <span
             className={
               "hidden sm:inline text-5xl sm:text-6xl font-bold text-stone-400 mt-[-10px]"
@@ -146,8 +107,8 @@ export default function Stopwatch() {
             .
           </span>
           <div className="hidden sm:flex gap-2">
-            <DigitWheel value={digitsArray[4]} speed={0.2} />
-            <DigitWheel value={digitsArray[5]} speed={0.1} />
+            <RollingDigit value={digitsArray[4]} speed={0.2} />
+            <RollingDigit value={digitsArray[5]} speed={0.1} />
           </div>
         </div>
 

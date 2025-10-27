@@ -5,7 +5,7 @@ import BottomInfoText from "../BottomInfoText";
 /* ------------------------- Hand & Dot Components ------------------------- */
 const Hand: React.FC<{ rotation: number }> = ({ rotation }) => (
   <div
-    className="absolute top-1/2 left-1/2 origin-left bg-indigo-400 duration-500 ease-in-out shadow-[0_0_6px] shadow-indigo-700"
+    className="absolute top-1/2 left-1/2 origin-left bg-amber-400 duration-500 ease-in-out shadow-[0_0_6px] shadow-amber-700"
     style={{
       width: "calc(50% - 1px)",
       height: "2px",
@@ -16,7 +16,7 @@ const Hand: React.FC<{ rotation: number }> = ({ rotation }) => (
 
 const Dot: React.FC = () => (
   <div
-    className="absolute top-1/2 left-1/2 bg-indigo-400 rounded-full"
+    className="absolute top-1/2 left-1/2 bg-amber-400 rounded-full"
     style={{
       width: "2px",
       height: "2px",
@@ -27,7 +27,7 @@ const Dot: React.FC = () => (
 
 /* ------------------------- Cell Component ------------------------- */
 const Cell: React.FC<{ rotations: number[] }> = ({ rotations }) => (
-  <div className="relative rounded-full bg-indigo-800/5 border border-indigo-950/50 size-7 md:size-12">
+  <div className="relative rounded-full bg-amber-800/5 border border-amber-950/50 size-7 md:size-12">
     <Hand rotation={rotations[0]} />
     <Hand rotation={rotations[1]} />
     <Dot />

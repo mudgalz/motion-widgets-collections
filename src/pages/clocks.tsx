@@ -1,5 +1,6 @@
 import { ArrowLeft } from "@/assets/icons";
 import ClockOfClocks from "@/components/clocks/ClockOfClocks";
+import PomodoroTimer from "@/components/clocks/PomodoroTimer";
 import Stopwatch from "@/components/clocks/Stopwatch";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +13,7 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-type ClockType = "stopwatch" | "countdown" | "digital" | "analog";
+type ClockType = "stopwatch" | "pomodoro" | "digital" | "analog";
 
 const Clocks = () => {
   const [clockType, setClockType] = useState<ClockType>("digital");
@@ -25,6 +26,8 @@ const Clocks = () => {
       case "digital":
         return <ClockOfClocks />;
 
+      case "pomodoro":
+        return <PomodoroTimer />;
       default:
         return null; // must handle default
     }
@@ -43,12 +46,13 @@ const Clocks = () => {
         <Select
           value={clockType}
           onValueChange={(val) => setClockType(val as ClockType)}>
-          <SelectTrigger className="w-36">
+          <SelectTrigger className="w-40">
             <SelectValue placeholder="Select Clock" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="stopwatch">Stopwatch</SelectItem>
             <SelectItem value="digital">Digital Clock</SelectItem>
+            <SelectItem value="stopwatch">Stopwatch</SelectItem>
+            <SelectItem value="pomodoro">Pomodoro Timer</SelectItem>
           </SelectContent>
         </Select>
       </div>

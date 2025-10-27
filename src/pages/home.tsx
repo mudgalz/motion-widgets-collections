@@ -22,9 +22,9 @@ const pages = [
   },
   {
     id: 4,
-    url: "/clock-of-clocks",
-    name: "Clock of Clocks",
-    desc: "A collection of interactive and animated clocks including digital, analog, stopwatch, and countdown timers.",
+    url: "/clocks",
+    name: "Clocks",
+    desc: "A collection of interactive and animated clocks including digital, stopwatch, and pomodoro timer.",
   },
 ];
 
