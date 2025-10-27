@@ -52,46 +52,36 @@ export default function PomodoroTimer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // TIMER LOOP
-  useEffect(() => {
-    let interval: any = null;
-    let lastUpdate = Date.now();
+useEffect(() => {
+  let interval: any = null;
+  let endTime: number;
 
-    if (running) {
-      interval = setInterval(() => {
-        const now = Date.now();
-        const delta = (now - lastUpdate) / 1000;
-        lastUpdate = now;
+  if (running) {
+    endTime = Date.now() + time * 1000;
 
-        setTime((prev) => {
-          const newTime = Math.max(0, prev - delta);
-          if (newTime === 0) {
-            setRunning(false);
-            if (interval) clearInterval(interval);
+    interval = setInterval(() => {
+      const remaining = Math.max(0, Math.round((endTime - Date.now()) / 1000));
 
-            // Show "Time’s Up" dialog
-            setShowDialog(true);
+      setTime(remaining);
 
-            // Start looping sound
-            if (audioRef.current) {
-              audioRef.current.loop = true;
-              audioRef.current.currentTime = 0;
-              const playPromise = audioRef.current.play();
-              if (playPromise) {
-                playPromise.catch(() =>
-                  console.warn("Audio blocked until user returns to tab.")
-                );
-              }
-            }
-          }
-          return newTime;
-        });
-      }, 1000);
-    }
+      if (remaining <= 0) {
+        clearInterval(interval!);
+        setRunning(false);
+        setShowDialog(true);
+        if (audioRef.current) {
+          audioRef.current.loop = true;
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(() =>
+            console.warn("Audio blocked until user returns to tab.")
+          );
+        }
+      }
+    }, 1000);
+  }
 
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [running, mode]);
+  return () => interval && clearInterval(interval);
+}, [running, mode]);
+
 
   // DIGITS
   const minutes = Math.floor(time / 60);
